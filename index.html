@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fabri Promos - Menú Interactivo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        /* Contenedor principal (Celular) */
+        .app-container { width: 360px; height: 720px; background-color: #f5f5f5; border-radius: 35px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 8px solid #333; position: relative; }
+        
+        /* Cabecera vibrante */
+        .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: 35px 20px 20px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
+        .header h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
+        .header p { font-size: 13px; color: #e1bcee; font-weight: 500; }
+        
+        /* Botón Volver */
+        .btn-back { position: absolute; top: 35px; left: 15px; color: white; background: rgba(255,255,255,0.2); border: none; padding: 5px 10px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; }
+        
+        /* Vistas */
+        .view { flex-grow: 1; overflow-y: auto; padding: 20px 15px; display: none; flex-direction: column; gap: 15px; }
+        .view.active { display: flex; }
+        
+        /* Categorías (Home) */
+        .cat-btn { background: white; border-radius: 20px; padding: 20px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 6px solid #742384; transition: transform 0.2s; }
+        .cat-btn:active { transform: scale(0.95); }
+        .cat-icon { font-size: 30px; margin-right: 15px; }
+        .cat-info h2 { font-size: 18px; color: #333; margin-bottom: 4px; }
+        .cat-info p { font-size: 12px; color: #777; }
+        .cat-btn.danger { border-left-color: #ff4757; }
+
+        /* Promos (Lista dentro de categoría) */
+        .promo-item { background-color: white; border-radius: 16px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; border-left: 5px solid #00E4C5; }
+        .promo-item:active { transform: scale(0.96); }
+        .promo-text { flex-grow: 1; }
+        .promo-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 4px; }
+        .promo-desc { font-size: 13px; color: #777; line-height: 1.3; }
+        .touch-icon { font-size: 20px; color: #00E4C5; }
+        
+        .empty-msg { text-align: center; color: #888; font-weight: bold; margin-top: 50px; font-size: 14px; }
+
+        /* Panel Desplegable (BottomSheet) */
+        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.15); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 20; display: flex; flex-direction: column; max-height: 85%; }
+        .bottom-sheet.active { transform: translateY(0); }
+        .sheet-header { text-align: center; margin-bottom: 20px; }
+        .sheet-title { font-size: 20px; font-weight: 800; color: #742384; margin-bottom: 5px; }
+        .sheet-subtitle { font-size: 14px; color: #555; font-style: italic; }
+        
+        /* Opciones combinables */
+        .addons-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; overflow-y: auto; max-height: 250px; padding-bottom: 10px; align-content: flex-start; }
+        .addon-chip { padding: 10px 15px; background: #f0f0f0; border: 2px solid transparent; border-radius: 20px; font-size: 13px; font-weight: 600; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .addon-chip.selected { background: #e0fcf9; border-color: #00E4C5; color: #00a891; transform: scale(1.05); }
+        .addon-chip.danger.selected { background: #ffebeb; border-color: #ff4757; color: #ff4757; }
+        .addon-header { width: 100%; font-size: 14px; font-weight: 800; color: #742384; margin-top: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
+
+        /* Botón Bellaco */
+        .btn-bellaco { width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; border: none; padding: 16px; border-radius: 25px; font-size: 16px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0, 228, 197, 0.4); flex-shrink: 0; }
+        .btn-bellaco:active { transform: scale(0.95); }
+        .btn-cancel { background: none; border: none; color: #999; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
+
+        /* Pantalla GOTY */
+        .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.95); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; text-align: center; }
+        .goty-screen.active { opacity: 1; pointer-events: auto; }
+        .goty-icon { font-size: 70px; animation: bounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; margin-bottom: 10px; }
+        .goty-title { font-size: 35px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .goty-text { color: white; font-size: 15px; margin-bottom: 30px; font-weight: 500; }
+        .btn-goty { background: white; color: #742384; padding: 12px 30px; border-radius: 25px; font-weight: 900; border: none; font-size: 15px; cursor: pointer; text-transform: uppercase; }
+
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .fade-out-item { transform: scale(0.8); opacity: 0; pointer-events: none; }
+        
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+        
+        .view::-webkit-scrollbar, .addons-container::-webkit-scrollbar { width: 4px; }
+        .view::-webkit-scrollbar-thumb, .addons-container::-webkit-scrollbar-thumb { background-color: #ddd; border-radius: 4px; }
+        .btn-reset { text-align: center; font-size: 11px; color: #aaa; margin-top: 10px; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="header">
+            <button class="btn-back" id="btnBack" onclick="goHome()">❮ Volver</button>
+            <h1 id="mainTitle">Fabri Promos</h1>
+            <p id="mainSubtitle">Selecciona una categoría, jefa</p>
+        </div>
+
+        <!-- VISTA 1: CATEGORÍAS -->
+        <div class="view active" id="viewHome">
+            <div class="cat-btn danger" onclick="openCategory('tomar')">
+                <div class="cat-icon">🍻</div>
+                <div class="cat-info"><h2>Tomar (Combos)</h2><p>Arma tu mezcla peligrosa</p></div>
+            </div>
+            <div class="cat-btn" onclick="openCategory('comer')">
+                <div class="cat-icon">🍔</div>
+                <div class="cat-info"><h2>Comer</h2><p>Platos fuertes y antojos</p></div>
+            </div>
+            <div class="cat-btn" onclick="openCategory('salir')">
+                <div class="cat-icon">🗺️</div>
+                <div class="cat-info"><h2>Salir</h2><p>Operación escape y aventuras</p></div>
+            </div>
+            <div class="cat-btn" onclick="openCategory('piqueos')">
+                <div class="cat-icon">🍟</div>
+                <div class="cat-info"><h2>Piqueos</h2><p>Emergencias de media tarde</p></div>
+            </div>
+            
+            <div class="btn-reset" onclick="resetearApp()">[Resetear Memoria]</div>
+        </div>
+
+        <!-- VISTA 2: LISTA DE PROMOS -->
+        <div class="view" id="viewCategory">
+            <!-- Se llena con JS -->
+        </div>
+
+        <!-- Overlay oscuro -->
+        <div class="overlay" id="overlay" onclick="cerrarCombo()"></div>
+
+        <!-- Panel "Algo Más?" / Confirmación Directa -->
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="sheet-header">
+                <div class="sheet-title" id="bsTitle">Armando Combo...</div>
+                <div class="sheet-subtitle" id="bsSubtitle">¿Le metemos algo más a esto?</div>
+            </div>
+            
+            <div class="addons-container" id="bsAddons"></div>
+
+            <button class="btn-bellaco" onclick="lanzarGoty()">¡MANDAR ORDEN! 🚀</button>
+            <button class="btn-cancel" onclick="cerrarCombo()">Mejor no, regresar</button>
+        </div>
+        
+        <!-- Pantalla GOTY Éxito -->
+        <div class="goty-screen" id="gotyScreen">
+            <div class="goty-icon">🏆</div>
+            <div class="goty-title">¡G O T Y!</div>
+            <div class="goty-text">Pedido confirmado a nivel Dios.<br>El operario Fabri está en camino.</div>
+            <button class="btn-goty" onclick="cerrarGoty()">Aceptar y Borrar Promo</button>
+        </div>
+
+    </div>
+
+    <script>
+        // BASE DE DATOS
+        const db = {
+            'tomar': {
+                title: 'Tomar 🍻', subtitle: 'Arma tu combo',
+                promos: [
+                    { 
+                        id: 't1', 
+                        title: 'Cervezas', 
+                        desc: 'Elige cuál y cuántas', 
+                        addons: [
+                            { isHeader: true, text: 'Marca:' },
+                            { text: 'Cusqueña', danger: false }, 
+                            { text: 'Corona', danger: false }, 
+                            { text: 'Pilsen', danger: false },
+                            { isHeader: true, text: 'Cantidad:' },
+                            { text: '1', danger: false },
+                            { text: '2', danger: false },
+                            { text: '3', danger: false },
+                            { text: 'Six Pack', danger: false }
+                        ] 
+                    },
+                    { 
+                        id: 't2', 
+                        title: 'Que nos choque 🔥', 
+                        desc: 'Peligro inminente', 
+                        addons: [
+                            { isHeader: true, text: 'Para Fabrizio:' },
+                            { text: '🔥 Four Loko', danger: true }, 
+                            { text: '🍷 Vino', danger: false }, 
+                            { isHeader: true, text: 'Para Li:' },
+                            { text: '🍷🍷 Vino x2', danger: true }, 
+                            { text: '🍫 Chocolate', danger: false }
+                        ] 
+                    }
+                ]
+            },
+            'comer': {
+                title: 'Comer 🍔', subtitle: 'Almuerzos y cenas',
+                promos: [
+                    { id: 'c1', title: 'Helado Mr. Bingsu', desc: 'Para refrescar.' },
+                    { id: 'c2', title: 'Pasta en Cachín', desc: 'Cena top.' },
+                    { id: 'c3', title: 'Poke Bowl', desc: 'Sanito y rico.' },
+                    { id: 'c4', title: 'Leche de Soya', desc: 'Nutritivo.' },
+                    { id: 'c5', title: '👨‍🍳 Fabri cocina', desc: 'Pide por esa boquita.' },
+                    { id: 'c6', title: 'Croissant de Pistacho', desc: 'Alanya vibes.' },
+                    { id: 'c7', title: 'Helado en Grido', desc: 'Clásico infalible.' }
+                ]
+            },
+            'salir': {
+                title: 'Salir 🗺️', subtitle: 'Aventuras',
+                promos: [
+                    { id: 's1', title: 'Museo', desc: 'Cita aesthetic.' },
+                    { id: 's2', title: 'Hotel 🏨', desc: 'La vieja confiable.' },
+                    { id: 's3', title: 'Buscar Nuevo Hotel', desc: 'Aventura de exploración.' },
+                    { id: 's4', title: 'Hablando Huevadas', desc: 'Noche de risas.' }
+                ]
+            },
+            'piqueos': {
+                title: 'Piqueos 🍟', subtitle: 'Emergencias',
+                promos: [
+                    { id: 'p1', title: 'Helado M&Ms', desc: 'Bajón dulce.' },
+                    { id: 'p2', title: 'Papitas', desc: 'Saladito y crunchy.' },
+                    { id: 'p3', title: 'Triple de Aceituna', desc: 'Clásico.' },
+                    { id: 'p4', title: 'Triple de Espinaca', desc: 'El favorito.' },
+                    { id: 'p5', title: 'Galletitas', desc: 'Para el camino.' },
+                    { id: 'p6', title: 'Inka Chips Nativas', desc: 'Papas nativas top.' },
+                    { id: 'p7', title: 'Papas de Cebolla', desc: 'Inka chips cebolla.' },
+                    { id: 'p8', title: 'Habas', desc: 'Crunchy saludable.' },
+                    { id: 'p9', title: 'Chocolate Chin Chin', desc: 'Barra de chocolate.' }
+                ]
+            }
+        };
+
+        let promoActiva = null;
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV6')) || [];
+
+        // NAVEGACIÓN
+        function goHome() {
+            document.getElementById('viewCategory').classList.remove('active');
+            document.getElementById('viewHome').classList.add('active');
+            document.getElementById('btnBack').style.display = 'none';
+            document.getElementById('mainTitle').innerText = 'Fabri Promos';
+            document.getElementById('mainSubtitle').innerText = 'Selecciona una categoría, jefa';
+        }
+
+        function openCategory(catId) {
+            const data = db[catId];
+            document.getElementById('mainTitle').innerText = data.title;
+            document.getElementById('mainSubtitle').innerText = data.subtitle;
+            document.getElementById('btnBack').style.display = 'block';
+            
+            const container = document.getElementById('viewCategory');
+            container.innerHTML = ''; // Limpiar
+            
+            let count = 0;
+            data.promos.forEach(p => {
+                if (!canjeados.includes(p.id)) {
+                    count++;
+                    const div = document.createElement('div');
+                    div.className = 'promo-item';
+                    div.id = p.id;
+                    div.onclick = () => abrirPromo(p.id, p.title, p.addons);
+                    div.innerHTML = `
+                        <div class="promo-text">
+                            <div class="promo-title">${p.title}</div>
+                            <div class="promo-desc">${p.desc}</div>
+                        </div>
+                        <div class="touch-icon">👉</div>
+                    `;
+                    container.appendChild(div);
+                }
+            });
+
+            if(count === 0) {
+                container.innerHTML = `<div class="empty-msg">Ya te acabaste todas las promos de aquí, jefa. 💔</div>`;
+            }
+
+            document.getElementById('viewHome').classList.remove('active');
+            document.getElementById('viewCategory').classList.add('active');
+        }
+
+        // ABRIR PROMO (BOTTOM SHEET)
+        function abrirPromo(id, title, addons) {
+            promoActiva = id;
+            document.getElementById('bsTitle').innerText = title;
+            
+            const addonsContainer = document.getElementById('bsAddons');
+            addonsContainer.innerHTML = '';
+            
+            if (addons && addons.length > 0) {
+                // Modo Interactivo (Tomar)
+                document.getElementById('bsSubtitle').innerText = '¿Con qué armamos este combo?';
+                addonsContainer.style.display = 'flex';
+                addons.forEach(addon => {
+                    if (addon.isHeader) {
+                        const hdr = document.createElement('div');
+                        hdr.className = 'addon-header';
+                        hdr.innerText = addon.text;
+                        addonsContainer.appendChild(hdr);
+                    } else {
+                        const div = document.createElement('div');
+                        div.className = `addon-chip ${addon.danger ? 'danger' : ''}`;
+                        div.innerText = addon.text;
+                        div.onclick = function() { this.classList.toggle('selected'); };
+                        addonsContainer.appendChild(div);
+                    }
+                });
+            } else {
+                // Modo Directo (Comer, Salir, etc)
+                document.getElementById('bsSubtitle').innerText = 'Confirmar canje directo.';
+                addonsContainer.style.display = 'none';
+            }
+
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('bottomSheet').classList.add('active');
+        }
+
+        // CERRAR BOTTOM SHEET
+        function cerrarCombo() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('bottomSheet').classList.remove('active');
+            promoActiva = null;
+        }
+
+        // LANZAR GOTY
+        function lanzarGoty() {
+            document.getElementById('bottomSheet').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('gotyScreen').classList.add('active');
+        }
+
+        // ACEPTAR Y BORRAR PROMO
+        function cerrarGoty() {
+            document.getElementById('gotyScreen').classList.remove('active');
+            if (promoActiva) {
+                const promoElement = document.getElementById(promoActiva);
+                promoElement.classList.add('fade-out-item');
+                setTimeout(() => {
+                    promoElement.style.display = 'none';
+                }, 300);
+
+                canjeados.push(promoActiva);
+                localStorage.setItem('fabriCanjesV6', JSON.stringify(canjeados));
+                promoActiva = null;
+            }
+        }
+
+        // RESET
+        function resetearApp() {
+            localStorage.removeItem('fabriCanjesV6');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
