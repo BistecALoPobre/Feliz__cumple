@@ -4,48 +4,62 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fabri Promos - App Definitiva</title>
+    <title>Fabri Promos - Menú Interactivo</title>
     <style>
-        /* ... [MANTENEMOS TU ESTILO CSS TAL CUAL] ... */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
         .app-container { width: 360px; height: 720px; background-color: #f5f5f5; border-radius: 35px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 8px solid #333; position: relative; }
         .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: 35px 20px 20px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
         .header h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
         .header p { font-size: 13px; color: #e1bcee; font-weight: 500; }
+        
         .btn-back { position: absolute; top: 35px; left: 15px; color: white; background: rgba(255,255,255,0.2); border: none; padding: 5px 10px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; }
+        
         .view { flex-grow: 1; overflow-y: auto; padding: 20px 15px; display: none; flex-direction: column; gap: 15px; }
         .view.active { display: flex; }
+        
         .cat-btn { background: white; border-radius: 20px; padding: 20px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 6px solid #742384; transition: transform 0.2s; }
         .cat-btn:active { transform: scale(0.95); }
         .cat-icon { font-size: 30px; margin-right: 15px; }
         .cat-info h2 { font-size: 18px; color: #333; margin-bottom: 4px; }
         .cat-info p { font-size: 12px; color: #777; }
         .cat-btn.danger { border-left-color: #ff4757; }
+
         .promo-item { background-color: white; border-radius: 16px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; border-left: 5px solid #00E4C5; position: relative; }
         .promo-item.canjeado { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; border-left-color: #ccc; }
         .promo-item.canjeado::after { content: "CANJEADO ✓"; position: absolute; right: 20px; font-weight: 900; color: #aaa; font-size: 12px; }
+        .promo-item:active:not(.canjeado) { transform: scale(0.96); }
         .promo-text { flex-grow: 1; }
         .promo-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 4px; }
         .promo-desc { font-size: 13px; color: #777; line-height: 1.3; }
+        
         .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.15); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 20; display: flex; flex-direction: column; max-height: 85%; }
         .bottom-sheet.active { transform: translateY(0); }
+        .sheet-header { text-align: center; margin-bottom: 20px; }
+        .sheet-title { font-size: 20px; font-weight: 800; color: #742384; margin-bottom: 5px; }
+        .sheet-subtitle { font-size: 14px; color: #555; font-style: italic; }
+        
         .addons-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; overflow-y: auto; max-height: 250px; padding-bottom: 10px; align-content: flex-start; }
         .addon-chip { padding: 10px 15px; background: #f0f0f0; border: 2px solid transparent; border-radius: 20px; font-size: 13px; font-weight: 600; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
         .addon-chip.selected { background: #e0fcf9; border-color: #00E4C5; color: #00a891; transform: scale(1.05); }
         .addon-chip.danger.selected { background: #ffebeb; border-color: #ff4757; color: #ff4757; }
         .addon-header { width: 100%; font-size: 14px; font-weight: 800; color: #742384; margin-top: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
         .btn-bellaco { width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; border: none; padding: 16px; border-radius: 25px; font-size: 16px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .btn-cancel { background: none; border: none; color: #999; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer; text-align: center; width: 100%; }
+
         .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.95); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; text-align: center; }
         .goty-screen.active { opacity: 1; pointer-events: auto; }
         .goty-title { font-size: 35px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; }
+        
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .overlay.active { opacity: 1; pointer-events: auto; }
         .btn-reset { text-align: center; font-size: 11px; color: #aaa; margin-top: 10px; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
+
     <div class="app-container">
         <div class="header">
             <button class="btn-back" id="btnBack" onclick="goHome()">❮ Volver</button>
@@ -89,7 +103,7 @@
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV9')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV8')) || [];
 
         function goHome() { document.getElementById('viewCategory').classList.remove('active'); document.getElementById('viewHome').classList.add('active'); document.getElementById('btnBack').style.display = 'none'; document.getElementById('mainTitle').innerText = 'Fabri Promos'; }
         
@@ -133,31 +147,25 @@
 
         function cerrarCombo() { document.getElementById('overlay').classList.remove('active'); document.getElementById('bottomSheet').classList.remove('active'); }
         
+        // BOTÓN MANDAR ORDEN: PROCESA TODO Y CIERRA
         function procesarCanje() {
-            // 1. Recopilar selección
-            let seleccion = Array.from(document.querySelectorAll('.addon-chip.selected')).map(c => c.innerText);
-            let msg = `¡Hola Fabri! Quiero canjear: ${document.getElementById('bsTitle').innerText}`;
-            if(seleccion.length > 0) msg += ` con: ${seleccion.join(', ')}`;
-            
-            // 2. Abrir WhatsApp (CAMBIA ESTE NÚMERO POR EL TUYO)
-            let numero = "519XXXXXXXXX"; // <-- PON TU NÚMERO AQUÍ
-            window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank');
-            
-            // 3. Marcar como canjeado
+            // 1. Marca como canjeado
             canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV9', JSON.stringify(canjeados));
+            localStorage.setItem('fabriCanjesV8', JSON.stringify(canjeados));
             
-            // 4. UI Feedback
+            // 2. Actualiza UI
             const el = document.getElementById(promoActiva);
             el.classList.add('canjeado');
             el.onclick = null;
+            
+            // 3. Feedback visual
             cerrarCombo();
             const screen = document.getElementById('gotyScreen');
             screen.classList.add('active');
             setTimeout(() => screen.classList.remove('active'), 1500);
         }
 
-        function resetearApp() { localStorage.removeItem('fabriCanjesV9'); location.reload(); }
+        function resetearApp() { localStorage.removeItem('fabriCanjesV8'); location.reload(); }
     </script>
 </body>
 </html>
