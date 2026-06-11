@@ -4,12 +4,14 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fabri Promos, Feliz Cumple</title>
+    <title>Fabri Promos - Menú Interactivo</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         
-        .app-container { width: 360px; height: 720px; background-color: #f5f5f5; border-radius: 35px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 8px solid #333; position: relative; }
+        /* 100% DE LA PANTALLA REAL DEL CELULAR */
+        html, body { height: 100%; background-color: #f5f5f5; overflow: hidden; }
+        .app-container { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; }
+        
         .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: 35px 20px 20px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
         .header h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
         .header p { font-size: 13px; color: #e1bcee; font-weight: 500; }
@@ -34,6 +36,9 @@
         .promo-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 4px; }
         .promo-desc { font-size: 13px; color: #777; line-height: 1.3; }
         
+        /* CARTEL DE SECCIÓN COMPLETADA */
+        .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 15px; border-radius: 15px; text-align: center; font-weight: 800; font-size: 14px; margin-bottom: 5px; border: 2px dashed #f48fb1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
         .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.15); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 20; display: flex; flex-direction: column; max-height: 85%; }
         .bottom-sheet.active { transform: translateY(0); }
         .sheet-header { text-align: center; margin-bottom: 20px; }
@@ -46,21 +51,34 @@
         .addon-chip.danger.selected { background: #ffebeb; border-color: #ff4757; color: #ff4757; }
         .addon-header { width: 100%; font-size: 14px; font-weight: 800; color: #742384; margin-top: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .btn-bellaco { width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; border: none; padding: 16px; border-radius: 25px; font-size: 16px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
-        .btn-cancel { background: none; border: none; color: #999; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer; text-align: center; width: 100%; }
+        .btn-bellaco { width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; border: none; padding: 16px; border-radius: 25px; font-size: 16px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0, 228, 197, 0.4); flex-shrink: 0; }
+        .btn-bellaco:active { transform: scale(0.95); }
+        .btn-cancel { background: none; border: none; color: #999; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
 
-        .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.95); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; text-align: center; }
+        .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.98); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 30px; text-align: center; }
         .goty-screen.active { opacity: 1; pointer-events: auto; }
-        .goty-title { font-size: 35px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; }
+        .goty-icon { font-size: 60px; animation: pulse 2s infinite; margin-bottom: 10px; }
+        .goty-title { font-size: 32px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
+        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; width: 100%; margin-bottom: 25px; border: 2px dashed #00E4C5; color: white; font-size: 16px; text-align: left; }
+        .goty-summary-box strong { color: #e1bcee; font-size: 18px; display: block; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
+        
+        .goty-text { color: white; font-size: 16px; margin-bottom: 30px; font-weight: 600; line-height: 1.4; }
+        .btn-goty { background: white; color: #742384; padding: 15px 30px; border-radius: 25px; font-weight: 900; border: none; font-size: 15px; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 100%; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .overlay.active { opacity: 1; pointer-events: auto; }
+        
+        .view::-webkit-scrollbar, .addons-container::-webkit-scrollbar { width: 4px; }
+        .view::-webkit-scrollbar-thumb, .addons-container::-webkit-scrollbar-thumb { background-color: #ddd; border-radius: 4px; }
         .btn-reset { text-align: center; font-size: 11px; color: #aaa; margin-top: 10px; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
+        
         <div class="header">
             <button class="btn-back" id="btnBack" onclick="goHome()">❮ Volver</button>
             <h1 id="mainTitle">Fabri Promos</h1>
@@ -68,24 +86,41 @@
         </div>
 
         <div class="view active" id="viewHome">
-            <div class="cat-btn danger" onclick="openCategory('tomar')"><div class="cat-icon">🍻</div><div class="cat-info"><h2>Tomar</h2><p>Arma tu mezcla</p></div></div>
-            <div class="cat-btn" onclick="openCategory('comer')"><div class="cat-icon">🍔</div><div class="cat-info"><h2>Comer</h2><p>Platos fuertes</p></div></div>
-            <div class="cat-btn" onclick="openCategory('salir')"><div class="cat-icon">🗺️</div><div class="cat-info"><h2>Salir</h2><p>Aventuras</p></div></div>
-            <div class="cat-btn" onclick="openCategory('piqueos')"><div class="cat-icon">🍟</div><div class="cat-info"><h2>Piqueos</h2><p>Emergencias</p></div></div>
+            <div class="cat-btn danger" onclick="openCategory('tomar')"><div class="cat-icon">🍻</div><div class="cat-info"><h2>Tomar (Combos)</h2><p>Arma tu mezcla peligrosa</p></div></div>
+            <div class="cat-btn" onclick="openCategory('comer')"><div class="cat-icon">🍔</div><div class="cat-info"><h2>Comer</h2><p>Platos fuertes y antojos</p></div></div>
+            <div class="cat-btn" onclick="openCategory('salir')"><div class="cat-icon">🗺️</div><div class="cat-info"><h2>Salir</h2><p>Operación escape y aventuras</p></div></div>
+            <div class="cat-btn" onclick="openCategory('piqueos')"><div class="cat-icon">🍟</div><div class="cat-info"><h2>Piqueos</h2><p>Emergencias de media tarde</p></div></div>
+            
             <div class="btn-reset" onclick="resetearApp()">[Resetear Memoria]</div>
         </div>
 
         <div class="view" id="viewCategory"></div>
+
         <div class="overlay" id="overlay" onclick="cerrarCombo()"></div>
 
         <div class="bottom-sheet" id="bottomSheet">
-            <div class="sheet-header"><div class="sheet-title" id="bsTitle"></div><div class="sheet-subtitle" id="bsSubtitle"></div></div>
+            <div class="sheet-header">
+                <div class="sheet-title" id="bsTitle">Armando Combo...</div>
+                <div class="sheet-subtitle" id="bsSubtitle">¿Le metemos algo más a esto?</div>
+            </div>
+            
             <div class="addons-container" id="bsAddons"></div>
-            <button class="btn-bellaco" onclick="procesarCanje()">¡MANDAR ORDEN! 🚀</button>
-            <button class="btn-cancel" onclick="cerrarCombo()">Regresar</button>
+
+            <button class="btn-bellaco" onclick="procesarCanje()">Mi amorcito, ese quieres? chiiii?🚀</button>
+            <button class="btn-cancel" onclick="cerrarCombo()">Mejor no, regresar</button>
         </div>
         
-        <div class="goty-screen" id="gotyScreen"><div class="goty-title">¡PEDIDO CONFIRMADO!</div></div>
+        <div class="goty-screen" id="gotyScreen">
+            <div class="goty-icon">💖</div>
+            <div class="goty-title">¡PEDIDO LISTO!</div>
+            
+            <div class="goty-summary-box" id="gotySummary"></div>
+            
+            <div class="goty-text">Listo mi amorcito :3333 beshooo, muchos beshitos</div>
+            
+            <button class="btn-goty" onclick="cerrarGoty()"> Yeeee, mi amorcito<333, te amooooo </button>
+        </div>
+
     </div>
 
     <script>
@@ -93,79 +128,239 @@
             'tomar': {
                 title: 'Tomar 🍻', subtitle: 'Arma tu combo',
                 promos: [
-                    { id: 't1', title: 'Cervezas', desc: 'Elige cuál y cuántas', addons: [{isHeader:true, text:'Marca:'},{text:'Cusqueña'},{text:'Corona'},{text:'Pilsen'},{isHeader:true, text:'Cantidad:'},{text:'1'},{text:'2'},{text:'3'},{text:'Six Pack'}] },
-                    { id: 't2', title: 'Que nos choque 🔥', desc: 'Peligro inminente', addons: [{isHeader:true, text:'Para Fabrizio:'},{text:'🔥 Four Loko'},{text:'🍷 Vino'},{isHeader:true, text:'Para Li:'},{text:'🍷🍷 Vino x2'},{text:'🍫 Chocolate'}] }
+                    { 
+                        id: 't1', title: 'Cervezas', desc: 'Elige cuál y cuántas', 
+                        addons: [ 
+                            { isHeader: true, text: 'Marca:' }, 
+                            { text: 'Cusqueña', danger: false, group: 'marca' }, 
+                            { text: 'Corona', danger: false, group: 'marca' }, 
+                            { text: 'Pilsen', danger: false, group: 'marca' }, 
+                            { isHeader: true, text: 'Cantidad:' }, 
+                            { text: '1', danger: false, group: 'cantidad' }, 
+                            { text: '2', danger: false, group: 'cantidad' }, 
+                            { text: '3', danger: false, group: 'cantidad' } 
+                        ] 
+                    },
+                    { 
+                        id: 't2', title: 'Que nos choque 🔥', desc: 'Peligro inminente', 
+                        addons: [ { isHeader: true, text: 'Para Fabrizio:' }, { text: '🔥 Four Loko', danger: true }, { text: '🍷 Vino', danger: false }, { isHeader: true, text: 'Para Li:' }, { text: '🍷🍷 Vino x2', danger: true }, { text: '🍫 Chocolate', danger: false } ] 
+                    }
                 ]
             },
-            'comer': { title: 'Comer 🍔', promos: [{id:'c1',title:'Mr. Bingsu'},{id:'c2',title:'Pasta Cachín'},{id:'c3',title:'Poke Bowl'},{id:'c4',title:'Soya'},{id:'c5',title:'Fabri cocina'},{id:'c6',title:'Pistacho'},{id:'c7',title:'Grido'}] },
-            'salir': { title: 'Salir 🗺️', promos: [{id:'s1',title:'Museo'},{id:'s2',title:'Hotel'},{id:'s3',title:'Buscar Hotel'},{id:'s4',title:'Hablando Huevadas'}] },
-            'piqueos': { title: 'Piqueos 🍟', promos: [{id:'p1',title:'Helado M&Ms'},{id:'p2',title:'Papitas'},{id:'p3',title:'Triple Aceituna'},{id:'p4',title:'Triple Espinaca'},{id:'p5',title:'Galletas'},{id:'p6',title:'Inka Chips'},{id:'p7',title:'Papas Cebolla'},{id:'p8',title:'Habas'},{id:'p9',title:'Chin Chin'}] }
+            'comer': {
+                title: 'Comer 🍔', subtitle: 'Almuerzos y cenas',
+                promos: [
+                    { id: 'c1', title: 'Helado Mr. Bingsu', desc: 'Para refrescar.' },
+                    { id: 'c2', title: 'Pasta en Cachín', desc: 'Cena top.' },
+                    { id: 'c3', title: 'Poke Bowl', desc: 'Sanito y rico.' },
+                    { 
+                        id: 'c5', title: '👨‍🍳 Fabri cocina', desc: 'Pide por esa boquita.', singleChoice: true,
+                        addons: [
+                            { isHeader: true, text: 'Muffins (Leche Coco):' }, { text: 'Vainilla Pura (Fav)', danger: false }, { text: 'Arándanos Frescos', danger: false }, { text: 'Menta & Choco Amargo', danger: false },
+                            { isHeader: true, text: 'Galletas (Leche Avellana):' }, { text: 'Grandotas Avena/Coco', danger: false }, { text: 'Vainilla Crunchy', danger: false },
+                            { isHeader: true, text: 'El Plus Gourmet:' }, { text: 'Clusters Choco 85% & Pistacho', danger: false }
+                        ]
+                    },
+                    { id: 'c6', title: 'Croissant de Pistacho', desc: 'Alanya vibes.' },
+                    { id: 'c7', title: 'Helado en Grido', desc: 'Clásico infalible.' }
+                ]
+            },
+            'salir': {
+                title: 'Salir 🗺️', subtitle: 'Aventuras',
+                promos: [ { id: 's1', title: 'Museo', desc: 'Cita aesthetic.' }, { id: 's2', title: 'Hotel 🏨', desc: 'La vieja confiable.' }, { id: 's3', title: 'Buscar Nuevo Hotel', desc: 'Aventura de exploración.' }, { id: 's4', title: 'Hablando Huevadas', desc: 'Noche de risas.' } ]
+            },
+            'piqueos': {
+                title: 'Piqueos 🍟', subtitle: 'Emergencias',
+                promos: [ 
+                    { id: 'p1', title: 'Helado M&Ms', desc: 'Bajón dulce.' }, 
+                    { id: 'p2', title: 'Papitas', desc: 'Saladito y crunchy.' }, 
+                    { id: 'p3', title: 'Triple de Aceituna', desc: 'Clásico.' }, 
+                    { id: 'p4', title: 'Triple de Espinaca', desc: 'El favorito.' }, 
+                    { id: 'p5', title: 'Galletitas', desc: 'Para el camino.' }, 
+                    { id: 'p6', title: 'Inka Chips Nativas', desc: 'Papas nativas top.' }, 
+                    { id: 'p7', title: 'Papas de Cebolla', desc: 'Inka chips cebolla.' }, 
+                    { id: 'p8', title: 'Habas', desc: 'Crunchy saludable.' }, 
+                    { id: 'p9', title: 'Chocolate Chin Chin', desc: 'Barra de chocolate.' },
+                    { id: 'p10', title: 'Leche de Soya', desc: 'Nutritivo.' },
+                    { id: 'p11', title: 'Galletón de Avena', desc: 'Sano y llenador.' }
+                ]
+            }
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV8')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV12')) || [];
 
-        function goHome() { document.getElementById('viewCategory').classList.remove('active'); document.getElementById('viewHome').classList.add('active'); document.getElementById('btnBack').style.display = 'none'; document.getElementById('mainTitle').innerText = 'Fabri Promos'; }
-        
+        function goHome() {
+            document.getElementById('viewCategory').classList.remove('active');
+            document.getElementById('viewHome').classList.add('active');
+            document.getElementById('btnBack').style.display = 'none';
+            document.getElementById('mainTitle').innerText = 'Fabri Promos';
+            document.getElementById('mainSubtitle').innerText = 'Selecciona una categoría, jefa';
+        }
+
         function openCategory(catId) {
             const data = db[catId];
             document.getElementById('mainTitle').innerText = data.title;
+            document.getElementById('mainSubtitle').innerText = data.subtitle;
             document.getElementById('btnBack').style.display = 'block';
+            
             const container = document.getElementById('viewCategory');
-            container.innerHTML = '';
+            container.innerHTML = ''; 
+            
+            let sinCanjear = 0;
+
             data.promos.forEach(p => {
+                if(!canjeados.includes(p.id)) sinCanjear++;
+                
                 const div = document.createElement('div');
                 div.className = 'promo-item ' + (canjeados.includes(p.id) ? 'canjeado' : '');
                 div.id = p.id;
-                if(!canjeados.includes(p.id)) div.onclick = () => abrirPromo(p.id, p.title, p.addons);
-                div.innerHTML = `<div class="promo-text"><div class="promo-title">${p.title}</div><div class="promo-desc">${p.desc || ''}</div></div>`;
+                
+                if(!canjeados.includes(p.id)) div.onclick = () => abrirPromo(p.id, p.title, p.addons, p.singleChoice);
+                div.innerHTML = `
+                    <div class="promo-text">
+                        <div class="promo-title">${p.title}</div>
+                        <div class="promo-desc">${p.desc || ''}</div>
+                    </div>
+                    ${!canjeados.includes(p.id) ? '<div class="touch-icon">👉</div>' : ''}
+                `;
                 container.appendChild(div);
             });
+
+            if(sinCanjear === 0) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'completed-msg';
+                msgDiv.innerHTML = '✨ Mi amooor, ya canjeaste todos los de aquí tiiii :3 ✨';
+                container.prepend(msgDiv);
+            }
+
             document.getElementById('viewHome').classList.remove('active');
             document.getElementById('viewCategory').classList.add('active');
         }
 
-        function abrirPromo(id, title, addons) {
+        function abrirPromo(id, title, addons, isSingleChoice) {
             promoActiva = id;
             document.getElementById('bsTitle').innerText = title;
-            const container = document.getElementById('bsAddons');
-            container.innerHTML = '';
-            if(addons) {
-                document.getElementById('bsSubtitle').innerText = '¿Con qué armamos este combo?';
-                container.style.display = 'flex';
-                addons.forEach(a => {
-                    if(a.isHeader) container.innerHTML += `<div class="addon-header">${a.text}</div>`;
-                    else container.innerHTML += `<div class="addon-chip" onclick="this.classList.toggle('selected')">${a.text}</div>`;
+            const addonsContainer = document.getElementById('bsAddons');
+            addonsContainer.innerHTML = '';
+            
+            if (addons && addons.length > 0) {
+                document.getElementById('bsSubtitle').innerText = isSingleChoice ? 'Elige solo 1 opción, mi amor:' : '¿Cómo armamos el combo, mi amorcito?';
+                addonsContainer.style.display = 'flex';
+                
+                addons.forEach(addon => {
+                    if (addon.isHeader) {
+                        const hdr = document.createElement('div');
+                        hdr.className = 'addon-header';
+                        hdr.innerText = addon.text;
+                        addonsContainer.appendChild(hdr);
+                    } else {
+                        const div = document.createElement('div');
+                        div.className = `addon-chip ${addon.danger ? 'danger' : ''}`;
+                        div.innerText = addon.text;
+                        
+                        // Añadimos el "grupo" si es que tiene (para Cervezas)
+                        if (addon.group) div.dataset.group = addon.group;
+                        
+                        div.onclick = function() { 
+                            if (isSingleChoice) {
+                                // Para Fabri Cocina: Desmarca todo
+                                const yaEstaba = this.classList.contains('selected');
+                                document.querySelectorAll('#bsAddons .addon-chip').forEach(c => c.classList.remove('selected'));
+                                if (!yaEstaba) this.classList.add('selected');
+                            } else if (addon.group) {
+                                // Para Cervezas: Desmarca solo los de su grupo
+                                const yaEstaba = this.classList.contains('selected');
+                                document.querySelectorAll(`#bsAddons .addon-chip[data-group="${addon.group}"]`).forEach(c => c.classList.remove('selected'));
+                                if (!yaEstaba) this.classList.add('selected');
+                            } else {
+                                // Normal (para Que Nos Choque)
+                                this.classList.toggle('selected'); 
+                            }
+                        };
+                        addonsContainer.appendChild(div);
+                    }
                 });
             } else {
                 document.getElementById('bsSubtitle').innerText = 'Confirmar canje directo.';
-                container.style.display = 'none';
+                addonsContainer.style.display = 'none';
             }
+
             document.getElementById('overlay').classList.add('active');
             document.getElementById('bottomSheet').classList.add('active');
         }
 
-        function cerrarCombo() { document.getElementById('overlay').classList.remove('active'); document.getElementById('bottomSheet').classList.remove('active'); }
-        
-        // BOTÓN MANDAR ORDEN: PROCESA TODO Y CIERRA
+        function cerrarCombo() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('bottomSheet').classList.remove('active');
+        }
+
         function procesarCanje() {
-            // 1. Marca como canjeado
-            canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV8', JSON.stringify(canjeados));
+            // 1. Recopilar datos
+            let titulo = document.getElementById('bsTitle').innerText;
+            let seleccion = Array.from(document.querySelectorAll('.addon-chip.selected')).map(c => c.innerText);
+            let textoSeleccion = seleccion.length > 0 ? seleccion.join(', ') : 'Ninguno (Canje directo)';
             
-            // 2. Actualiza UI
+            // 2. Crear el recibo dinámico para la pantalla de Li
+            let resumenHTML = `<strong>${titulo}</strong>`;
+            if(seleccion.length > 0) {
+                resumenHTML += `+ ${seleccion.join('<br>+ ')}`;
+            } else {
+                resumenHTML += `<div style="text-align:center; font-size:13px; color:#ccc; margin-top:10px;">(Canje directo)</div>`;
+            }
+            document.getElementById('gotySummary').innerHTML = resumenHTML;
+
+            // ==========================================
+            // 3. MAGIA INVISIBLE: ENVIAR A TELEGRAM
+            // ==========================================
+            const botToken = '8978888925:AAG27yYKiUTpX8ZKY0kJbkZ8zvg3DyNmuqc'; // Ej: 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+            const chatId = '5734425002';       // Ej: 987654321
+            
+            const mensajeTelegram = `🚨 ¡ALERTA DE CAPRICHO!\n\n👑 Li acaba de canjear:\n🍔 Promo: ${titulo}\n📌 Extras: ${textoSeleccion}\n\n¡Alista todo, operario Fabri! 🚀`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: mensajeTelegram
+                })
+            }).catch(error => console.log('Error silenciado:', error));
+            // ==========================================
+
+            // 4. Marcar como canjeado en memoria
+            canjeados.push(promoActiva);
+            localStorage.setItem('fabriCanjesV12', JSON.stringify(canjeados));
+            
+            // 5. Actualizar UI
             const el = document.getElementById(promoActiva);
             el.classList.add('canjeado');
             el.onclick = null;
+            const icon = el.querySelector('.touch-icon');
+            if (icon) icon.remove();
             
-            // 3. Feedback visual
+            // 6. Mostrar Pantalla de Captura
             cerrarCombo();
-            const screen = document.getElementById('gotyScreen');
-            screen.classList.add('active');
-            setTimeout(() => screen.classList.remove('active'), 1500);
+            document.getElementById('gotyScreen').classList.add('active');
         }
 
-        function resetearApp() { localStorage.removeItem('fabriCanjesV8'); location.reload(); }
+        function cerrarGoty() {
+            document.getElementById('gotyScreen').classList.remove('active');
+            promoActiva = null;
+            
+            const catActiva = document.getElementById('mainTitle').innerText;
+            for (let cat in db) {
+                if (db[cat].title === catActiva) {
+                    openCategory(cat);
+                    break;
+                }
+            }
+        }
+
+        function resetearApp() {
+            localStorage.removeItem('fabriCanjesV12');
+            location.reload();
+        }
     </script>
 </body>
 </html>
