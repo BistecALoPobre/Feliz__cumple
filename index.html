@@ -2,72 +2,73 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Meta tag agresivo anti-visores brutos -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
     <title>Fabri Promos</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEO ANTI-ENCOGIMIENTO PARA CELULARES */
-        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-        html, body { width: 100%; height: 100%; background-color: #f5f5f5; overflow: hidden; margin: 0; padding: 0; touch-action: manipulation; }
+        /* BLOQUEO ANTI-ENCOGIMIENTO EXTREMO */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; font-size: 16px; }
+        html, body { width: 100vw; max-width: 100vw; height: 100vh; background-color: #f5f5f5; overflow: hidden; margin: 0; padding: 0; touch-action: manipulation; }
         
-        /* CONTENEDOR 100% FLUIDO */
         .app-container { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background-color: #f5f5f5; overflow: hidden; }
         
-        .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: 40px 25px 25px 25px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
-        .header h1 { font-size: 30px; font-weight: 900; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
-        .header p { font-size: 16px; color: #e1bcee; font-weight: 500; }
+        /* TAMAÑOS MÁS GRANDES PARA COMPENSAR */
+        .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: calc(40px + env(safe-area-inset-top)) 25px 25px 25px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
+        .header h1 { font-size: 34px; font-weight: 900; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
+        .header p { font-size: 18px; color: #e1bcee; font-weight: 500; }
         
-        .btn-back { position: absolute; top: 40px; left: 20px; color: white; background: rgba(255,255,255,0.25); border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; display: none; font-size: 15px; }
+        .btn-back { position: absolute; top: calc(40px + env(safe-area-inset-top)); left: 20px; color: white; background: rgba(255,255,255,0.25); border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; display: none; font-size: 16px; }
         
         .view { flex-grow: 1; overflow-y: auto; padding: 25px 20px; display: none; flex-direction: column; gap: 18px; }
         .view.active { display: flex; }
         
         .cat-btn { background: white; border-radius: 24px; padding: 25px 20px; display: flex; align-items: center; box-shadow: 0 6px 15px rgba(0,0,0,0.06); cursor: pointer; border-left: 8px solid #742384; transition: transform 0.2s; }
         .cat-btn:active { transform: scale(0.96); }
-        .cat-icon { font-size: 45px; margin-right: 20px; }
-        .cat-info h2 { font-size: 22px; color: #333; margin-bottom: 6px; font-weight: 800; }
-        .cat-info p { font-size: 15px; color: #777; line-height: 1.3; }
+        .cat-icon { font-size: 48px; margin-right: 20px; }
+        .cat-info h2 { font-size: 24px; color: #333; margin-bottom: 6px; font-weight: 900; }
+        .cat-info p { font-size: 16px; color: #777; line-height: 1.3; }
         .cat-btn.danger { border-left-color: #ff4757; }
 
         .promo-item { background-color: white; border-radius: 20px; padding: 22px 20px; box-shadow: 0 5px 12px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; border-left: 6px solid #00E4C5; position: relative; }
         .promo-item.canjeado { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; border-left-color: #ccc; box-shadow: none; }
-        .promo-item.canjeado::after { content: "CANJEADO ✓"; position: absolute; right: 20px; font-weight: 900; color: #aaa; font-size: 13px; }
+        .promo-item.canjeado::after { content: "CANJEADO ✓"; position: absolute; right: 20px; font-weight: 900; color: #aaa; font-size: 14px; }
         .promo-item:active:not(.canjeado) { transform: scale(0.96); }
         .promo-text { flex-grow: 1; padding-right: 15px; }
-        .promo-title { font-size: 20px; font-weight: 800; color: #333; margin-bottom: 6px; }
-        .promo-desc { font-size: 15px; color: #777; line-height: 1.4; }
-        .touch-icon { font-size: 25px; }
+        .promo-title { font-size: 22px; font-weight: 800; color: #333; margin-bottom: 6px; }
+        .promo-desc { font-size: 16px; color: #777; line-height: 1.4; }
+        .touch-icon { font-size: 28px; }
         
-        .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 18px; border-radius: 20px; text-align: center; font-weight: 800; font-size: 15px; margin-bottom: 10px; border: 2px dashed #f48fb1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 18px; border-radius: 20px; text-align: center; font-weight: 900; font-size: 16px; margin-bottom: 10px; border: 2px dashed #f48fb1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 35px 25px 40px 25px; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 20; display: flex; flex-direction: column; max-height: 85%; }
+        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 35px 25px calc(40px + env(safe-area-inset-bottom)); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 20; display: flex; flex-direction: column; max-height: 85%; }
         .bottom-sheet.active { transform: translateY(0); }
         .sheet-header { text-align: center; margin-bottom: 25px; }
-        .sheet-title { font-size: 26px; font-weight: 900; color: #742384; margin-bottom: 8px; }
-        .sheet-subtitle { font-size: 16px; color: #666; font-style: italic; }
+        .sheet-title { font-size: 28px; font-weight: 900; color: #742384; margin-bottom: 8px; }
+        .sheet-subtitle { font-size: 18px; color: #666; font-style: italic; }
         
         .addons-container { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; overflow-y: auto; max-height: 300px; padding-bottom: 10px; align-content: flex-start; }
-        .addon-chip { padding: 15px 22px; background: #f0f0f0; border: 2px solid transparent; border-radius: 25px; font-size: 16px; font-weight: 700; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .addon-chip { padding: 16px 24px; background: #f0f0f0; border: 2px solid transparent; border-radius: 25px; font-size: 18px; font-weight: 800; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
         .addon-chip.selected { background: #e0fcf9; border-color: #00E4C5; color: #00a891; transform: scale(1.05); }
         .addon-chip.danger.selected { background: #ffebeb; border-color: #ff4757; color: #ff4757; }
-        .addon-header { width: 100%; font-size: 17px; font-weight: 900; color: #742384; margin-top: 10px; border-bottom: 2px solid #eee; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .addon-header { width: 100%; font-size: 18px; font-weight: 900; color: #742384; margin-top: 10px; border-bottom: 2px solid #eee; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .btn-bellaco { width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; border: none; padding: 22px; border-radius: 35px; font-size: 18px; font-weight: 900; cursor: pointer; transition: transform 0.2s; box-shadow: 0 8px 20px rgba(0, 228, 197, 0.4); flex-shrink: 0; }
+        .btn-bellaco { width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; border: none; padding: 24px; border-radius: 35px; font-size: 20px; font-weight: 900; cursor: pointer; transition: transform 0.2s; box-shadow: 0 8px 20px rgba(0, 228, 197, 0.4); flex-shrink: 0; }
         .btn-bellaco:active { transform: scale(0.95); }
-        .btn-cancel { background: none; border: none; color: #999; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
+        .btn-cancel { background: none; border: none; color: #999; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
 
         .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.98); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 30px; text-align: center; }
         .goty-screen.active { opacity: 1; pointer-events: auto; }
-        .goty-icon { font-size: 80px; animation: pulse 2s infinite; margin-bottom: 15px; }
-        .goty-title { font-size: 38px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .goty-icon { font-size: 90px; animation: pulse 2s infinite; margin-bottom: 15px; }
+        .goty-title { font-size: 42px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
-        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 25px; width: 100%; margin-bottom: 30px; border: 2px dashed #00E4C5; color: white; font-size: 18px; text-align: left; line-height: 1.5; }
-        .goty-summary-box strong { color: #e1bcee; font-size: 22px; display: block; margin-bottom: 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; }
+        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 25px; width: 100%; margin-bottom: 30px; border: 2px dashed #00E4C5; color: white; font-size: 20px; text-align: left; line-height: 1.5; }
+        .goty-summary-box strong { color: #e1bcee; font-size: 24px; display: block; margin-bottom: 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; }
         
-        .goty-text { color: white; font-size: 18px; margin-bottom: 35px; font-weight: 600; line-height: 1.4; }
-        .btn-goty { background: white; color: #742384; padding: 20px 30px; border-radius: 35px; font-weight: 900; border: none; font-size: 17px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); width: 100%; }
+        .goty-text { color: white; font-size: 20px; margin-bottom: 35px; font-weight: 600; line-height: 1.4; }
+        .btn-goty { background: white; color: #742384; padding: 22px 30px; border-radius: 35px; font-weight: 900; border: none; font-size: 18px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); width: 100%; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
@@ -75,13 +76,12 @@
         
         .view::-webkit-scrollbar, .addons-container::-webkit-scrollbar { width: 5px; }
         .view::-webkit-scrollbar-thumb, .addons-container::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 5px; }
-        .btn-reset { text-align: center; font-size: 14px; color: #aaa; margin-top: 15px; cursor: pointer; text-decoration: underline; padding: 10px; }
+        .btn-reset { text-align: center; font-size: 15px; color: #aaa; margin-top: 15px; cursor: pointer; text-decoration: underline; padding: 10px; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
         <div class="header">
             <button class="btn-back" id="btnBack" onclick="goHome()">❮ Volver</button>
             <h1 id="mainTitle">Fabri Promos</h1>
@@ -98,7 +98,6 @@
         </div>
 
         <div class="view" id="viewCategory"></div>
-
         <div class="overlay" id="overlay" onclick="cerrarCombo()"></div>
 
         <div class="bottom-sheet" id="bottomSheet">
@@ -116,11 +115,8 @@
         <div class="goty-screen" id="gotyScreen">
             <div class="goty-icon">💖</div>
             <div class="goty-title">¡PEDIDO LISTO!</div>
-            
             <div class="goty-summary-box" id="gotySummary"></div>
-            
             <div class="goty-text">Listo mi amorcito :3333 beshooo, muchos beshitos</div>
-            
             <button class="btn-goty" onclick="cerrarGoty()"> Yeeee, mi amorcito <333, te amooooo </button>
         </div>
 
@@ -191,7 +187,7 @@
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV16')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV17')) || [];
 
         function goHome() {
             document.getElementById('viewCategory').classList.remove('active');
@@ -307,26 +303,19 @@
             }
             document.getElementById('gotySummary').innerHTML = resumenHTML;
 
-            // ==========================================
-            // MAGIA INVISIBLE: ENVIAR A TELEGRAM
-            // ==========================================
+            // ENVIAR A TELEGRAM
             const botToken = '8978888925:AAG27yYKiUTpX8ZKY0kJbkZ8zvg3DyNmuqc';
             const chatId = '5734425002';
-            
             const mensajeTelegram = `🚨 ¡ALERTA DE CAPRICHO!\n\n👑 Li acaba de canjear:\n🍔 Promo: ${titulo}\n📌 Extras: ${textoSeleccion}\n\n¡Alista todo, operario Fabri! 🚀`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: mensajeTelegram
-                })
+                body: JSON.stringify({ chat_id: chatId, text: mensajeTelegram })
             }).catch(error => console.log('Error silenciado:', error));
-            // ==========================================
 
             canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV16', JSON.stringify(canjeados));
+            localStorage.setItem('fabriCanjesV17', JSON.stringify(canjeados));
             
             const el = document.getElementById(promoActiva);
             el.classList.add('canjeado');
@@ -352,7 +341,7 @@
         }
 
         function resetearApp() {
-            localStorage.removeItem('fabriCanjesV16');
+            localStorage.removeItem('fabriCanjesV17');
             location.reload();
         }
     </script>
