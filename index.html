@@ -8,94 +8,95 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEO ANTI-ENCOGIMIENTO */
         html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
         html, body { width: 100vw; max-width: 100vw; height: 100vh; background-color: #f5f5f5; overflow: hidden; margin: 0; padding: 0; touch-action: manipulation; }
         
         .app-container { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; background-color: #f5f5f5; overflow: hidden; }
         
-        .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: calc(30px + env(safe-area-inset-top)) 20px 20px 20px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
-        .header h1 { font-size: 28px; font-weight: 900; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
-        .header p { font-size: 15px; color: #e1bcee; font-weight: 500; }
+        .header { background: linear-gradient(135deg, #742384, #9b2fad); color: white; padding: calc(25px + env(safe-area-inset-top)) 20px 15px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 5px 15px rgba(116, 35, 132, 0.4); z-index: 10; position: relative; flex-shrink: 0; }
+        .header h1 { font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
+        .header p { font-size: 14px; color: #e1bcee; font-weight: 500; }
         
-        .btn-back { position: absolute; top: calc(30px + env(safe-area-inset-top)); left: 15px; color: white; background: rgba(255,255,255,0.25); border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; font-size: 14px; }
+        .btn-back { position: absolute; top: calc(25px + env(safe-area-inset-top)); left: 15px; color: white; background: rgba(255,255,255,0.25); border: none; padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; font-size: 13px; }
         
-        .view { flex-grow: 1; overflow-y: auto; padding: 20px 15px; display: none; flex-direction: column; gap: 15px; }
+        .view { flex-grow: 1; overflow-y: auto; padding: 15px; display: none; flex-direction: column; gap: 12px; }
         .view.active { display: flex; }
         
-        .cat-btn { background: white; border-radius: 20px; padding: 20px 15px; display: flex; align-items: center; box-shadow: 0 5px 12px rgba(0,0,0,0.05); cursor: pointer; border-left: 6px solid #742384; transition: transform 0.2s; }
+        /* MENU PRINCIPAL MÁS PEQUEÑO */
+        .cat-btn { background: white; border-radius: 16px; padding: 16px 15px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 5px solid #742384; transition: transform 0.2s; }
         .cat-btn:active { transform: scale(0.96); }
-        .cat-icon { font-size: 40px; margin-right: 15px; }
-        .cat-info h2 { font-size: 20px; color: #333; margin-bottom: 4px; font-weight: 900; }
-        .cat-info p { font-size: 14px; color: #777; line-height: 1.3; }
+        .cat-icon { font-size: 32px; margin-right: 15px; }
+        .cat-info h2 { font-size: 18px; color: #333; margin-bottom: 3px; font-weight: 800; }
+        .cat-info p { font-size: 13px; color: #777; line-height: 1.2; }
         .cat-btn.danger { border-left-color: #ff4757; }
 
-        .promo-item { background-color: white; border-radius: 18px; padding: 18px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; border-left: 5px solid #00E4C5; position: relative; }
+        /* LISTA DE PROMOS MÁS COMPACTA */
+        .promo-item { background-color: white; border-radius: 14px; padding: 15px; box-shadow: 0 3px 8px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; border-left: 4px solid #00E4C5; position: relative; }
         .promo-item.canjeado { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; border-left-color: #ccc; box-shadow: none; }
-        .promo-item.canjeado::after { content: "CANJEADO ✓"; position: absolute; right: 15px; font-weight: 900; color: #aaa; font-size: 12px; }
+        .promo-item.canjeado::after { content: "CANJEADO ✓"; position: absolute; right: 15px; font-weight: 900; color: #aaa; font-size: 11px; }
         .promo-item:active:not(.canjeado) { transform: scale(0.96); }
         .promo-text { flex-grow: 1; padding-right: 10px; }
-        .promo-title { font-size: 18px; font-weight: 800; color: #333; margin-bottom: 4px; }
-        .promo-desc { font-size: 14px; color: #777; line-height: 1.3; }
-        .touch-icon { font-size: 24px; }
+        .promo-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 3px; }
+        .promo-desc { font-size: 13px; color: #777; line-height: 1.3; }
+        .touch-icon { font-size: 20px; }
         
-        .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 15px; border-radius: 15px; text-align: center; font-weight: 900; font-size: 14px; margin-bottom: 5px; border: 2px dashed #f48fb1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 12px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 13px; margin-bottom: 5px; border: 2px dashed #f48fb1; box-shadow: 0 3px 8px rgba(0,0,0,0.05); }
 
         /* ========================================================= */
-        /* LA CAJITA BLANCA ARREGLADA (BOTTOM SHEET) - MÁS COMPACTA  */
+        /* LA CAJITA BLANCA (BOTTOM SHEET) - AÚN MÁS PEQUEÑA         */
         /* ========================================================= */
         .bottom-sheet { 
             position: absolute; bottom: 0; left: 0; width: 100%; 
-            background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; 
-            padding: 20px 20px calc(15px + env(safe-area-inset-bottom)); 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.15); 
+            background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; 
+            padding: 20px 15px calc(15px + env(safe-area-inset-bottom)); 
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.15); 
             transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); 
             z-index: 20; display: flex; flex-direction: column; 
-            max-height: 85vh; 
+            max-height: 80vh; 
         }
         .bottom-sheet.active { transform: translateY(0); }
         .sheet-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
-        .sheet-title { font-size: 22px; font-weight: 900; color: #742384; margin-bottom: 4px; }
-        .sheet-subtitle { font-size: 14px; color: #666; font-style: italic; }
+        .sheet-title { font-size: 20px; font-weight: 900; color: #742384; margin-bottom: 3px; }
+        .sheet-subtitle { font-size: 13px; color: #666; font-style: italic; }
         
         .addons-container { 
             display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; 
             overflow-y: auto; flex-grow: 1; align-content: flex-start; padding-right: 5px; 
         }
-        .addon-chip { padding: 10px 16px; background: #f0f0f0; border: 2px solid transparent; border-radius: 20px; font-size: 14px; font-weight: 800; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .addon-chip { padding: 8px 14px; background: #f0f0f0; border: 2px solid transparent; border-radius: 15px; font-size: 13px; font-weight: 700; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
         .addon-chip.selected { background: #e0fcf9; border-color: #00E4C5; color: #00a891; transform: scale(1.05); }
         .addon-chip.danger.selected { background: #ffebeb; border-color: #ff4757; color: #ff4757; }
-        .addon-header { width: 100%; font-size: 13px; font-weight: 900; color: #742384; margin-top: 5px; border-bottom: 2px solid #eee; padding-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .addon-header { width: 100%; font-size: 12px; font-weight: 900; color: #742384; margin-top: 5px; border-bottom: 1px solid #eee; padding-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
         .btn-bellaco { 
             width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; 
-            border: none; padding: 16px; border-radius: 25px; font-size: 15px; font-weight: 900; 
-            cursor: pointer; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0, 228, 197, 0.4); 
+            border: none; padding: 14px; border-radius: 20px; font-size: 14px; font-weight: 900; 
+            cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(0, 228, 197, 0.4); 
             flex-shrink: 0; margin-top: auto; 
         }
         .btn-bellaco:active { transform: scale(0.95); }
-        .btn-cancel { background: none; border: none; color: #999; font-size: 14px; font-weight: bold; margin-top: 12px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
+        .btn-cancel { background: none; border: none; color: #999; font-size: 13px; font-weight: bold; margin-top: 10px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
         /* ========================================================= */
 
-        /* Ajuste de pantalla de éxito también más elegante */
-        .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.98); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 25px; text-align: center; }
+        /* PANTALLA GOTY REDUCIDA Y ESTILIZADA */
+        .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.98); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; text-align: center; }
         .goty-screen.active { opacity: 1; pointer-events: auto; }
-        .goty-icon { font-size: 70px; animation: pulse 2s infinite; margin-bottom: 10px; }
-        .goty-title { font-size: 32px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .goty-icon { font-size: 60px; animation: pulse 2s infinite; margin-bottom: 10px; }
+        .goty-title { font-size: 28px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; text-shadow: 0 3px 8px rgba(0,0,0,0.3); }
         
-        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; width: 100%; margin-bottom: 25px; border: 2px dashed #00E4C5; color: white; font-size: 15px; text-align: left; line-height: 1.5; }
-        .goty-summary-box strong { color: #e1bcee; font-size: 18px; display: block; margin-bottom: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px; }
+        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; width: 100%; margin-bottom: 20px; border: 2px dashed #00E4C5; color: white; font-size: 14px; text-align: left; line-height: 1.4; }
+        .goty-summary-box strong { color: #e1bcee; font-size: 16px; display: block; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
         
-        .goty-text { color: white; font-size: 16px; margin-bottom: 30px; font-weight: 600; line-height: 1.4; }
-        .btn-goty { background: white; color: #742384; padding: 16px 25px; border-radius: 25px; font-weight: 900; border: none; font-size: 15px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.3); width: 100%; }
+        .goty-text { color: white; font-size: 15px; margin-bottom: 25px; font-weight: 600; line-height: 1.3; }
+        .btn-goty { background: white; color: #742384; padding: 14px 20px; border-radius: 20px; font-weight: 900; border: none; font-size: 14px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 100%; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .overlay.active { opacity: 1; pointer-events: auto; }
         
-        .view::-webkit-scrollbar, .addons-container::-webkit-scrollbar { width: 5px; }
-        .view::-webkit-scrollbar-thumb, .addons-container::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 5px; }
-        .btn-reset { text-align: center; font-size: 13px; color: #aaa; margin-top: 15px; cursor: pointer; text-decoration: underline; padding: 10px; }
+        .view::-webkit-scrollbar, .addons-container::-webkit-scrollbar { width: 4px; }
+        .view::-webkit-scrollbar-thumb, .addons-container::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+        .btn-reset { text-align: center; font-size: 12px; color: #aaa; margin-top: 10px; cursor: pointer; text-decoration: underline; padding: 10px; }
     </style>
 </head>
 <body>
@@ -104,7 +105,7 @@
         <div class="header">
             <button class="btn-back" id="btnBack" onclick="goHome()">❮ Volver</button>
             <h1 id="mainTitle">Fabri Promos</h1>
-            <p id="mainSubtitle">Selecciona una categoría, moooooooooor</p>
+            <p id="mainSubtitle">Selecciona una categoría, jefa</p>
         </div>
 
         <div class="view active" id="viewHome">
@@ -205,7 +206,7 @@
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV19')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV20')) || [];
 
         function goHome() {
             document.getElementById('viewCategory').classList.remove('active');
@@ -317,7 +318,7 @@
             if(seleccion.length > 0) {
                 resumenHTML += `+ ${seleccion.join('<br>+ ')}`;
             } else {
-                resumenHTML += `<div style="text-align:center; font-size:14px; color:#ccc; margin-top:10px;">(Canje directo)</div>`;
+                resumenHTML += `<div style="text-align:center; font-size:13px; color:#ccc; margin-top:10px;">(Canje directo)</div>`;
             }
             document.getElementById('gotySummary').innerHTML = resumenHTML;
 
@@ -333,7 +334,7 @@
             }).catch(error => console.log('Error silenciado:', error));
 
             canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV19', JSON.stringify(canjeados));
+            localStorage.setItem('fabriCanjesV20', JSON.stringify(canjeados));
             
             const el = document.getElementById(promoActiva);
             el.classList.add('canjeado');
@@ -359,7 +360,7 @@
         }
 
         function resetearApp() {
-            localStorage.removeItem('fabriCanjesV19');
+            localStorage.removeItem('fabriCanjesV20');
             location.reload();
         }
     </script>
