@@ -42,53 +42,52 @@
         .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 15px; border-radius: 15px; text-align: center; font-weight: 900; font-size: 14px; margin-bottom: 5px; border: 2px dashed #f48fb1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         /* ========================================================= */
-        /* LA CAJITA BLANCA ARREGLADA (BOTTOM SHEET)                 */
+        /* LA CAJITA BLANCA ARREGLADA (BOTTOM SHEET) - MÁS COMPACTA  */
         /* ========================================================= */
         .bottom-sheet { 
             position: absolute; bottom: 0; left: 0; width: 100%; 
-            background: white; border-top-left-radius: 30px; border-top-right-radius: 30px; 
-            padding: 25px 20px calc(20px + env(safe-area-inset-bottom)); 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2); 
+            background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; 
+            padding: 20px 20px calc(15px + env(safe-area-inset-bottom)); 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.15); 
             transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); 
             z-index: 20; display: flex; flex-direction: column; 
-            max-height: 85vh; /* Ocupa máximo el 85% de la pantalla */
+            max-height: 85vh; 
         }
         .bottom-sheet.active { transform: translateY(0); }
-        .sheet-header { text-align: center; margin-bottom: 15px; flex-shrink: 0; }
-        .sheet-title { font-size: 24px; font-weight: 900; color: #742384; margin-bottom: 4px; }
-        .sheet-subtitle { font-size: 15px; color: #666; font-style: italic; }
+        .sheet-header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
+        .sheet-title { font-size: 22px; font-weight: 900; color: #742384; margin-bottom: 4px; }
+        .sheet-subtitle { font-size: 14px; color: #666; font-style: italic; }
         
-        /* ZONA DE OPCIONES: AHORA SCROLLEA POR DENTRO Y NO EMPUJA AL BOTÓN */
         .addons-container { 
-            display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; 
+            display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; 
             overflow-y: auto; flex-grow: 1; align-content: flex-start; padding-right: 5px; 
         }
-        .addon-chip { padding: 12px 18px; background: #f0f0f0; border: 2px solid transparent; border-radius: 20px; font-size: 14px; font-weight: 800; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .addon-chip { padding: 10px 16px; background: #f0f0f0; border: 2px solid transparent; border-radius: 20px; font-size: 14px; font-weight: 800; color: #555; cursor: pointer; transition: all 0.2s; user-select: none; }
         .addon-chip.selected { background: #e0fcf9; border-color: #00E4C5; color: #00a891; transform: scale(1.05); }
         .addon-chip.danger.selected { background: #ffebeb; border-color: #ff4757; color: #ff4757; }
-        .addon-header { width: 100%; font-size: 14px; font-weight: 900; color: #742384; margin-top: 5px; border-bottom: 2px solid #eee; padding-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .addon-header { width: 100%; font-size: 13px; font-weight: 900; color: #742384; margin-top: 5px; border-bottom: 2px solid #eee; padding-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* BOTONES FIJOS AL FONDO */
         .btn-bellaco { 
             width: 100%; background: linear-gradient(90deg, #00E4C5, #00c7ac); color: #111; 
-            border: none; padding: 18px; border-radius: 30px; font-size: 16px; font-weight: 900; 
+            border: none; padding: 16px; border-radius: 25px; font-size: 15px; font-weight: 900; 
             cursor: pointer; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0, 228, 197, 0.4); 
-            flex-shrink: 0; margin-top: auto; /* Esto lo clava al fondo */
+            flex-shrink: 0; margin-top: auto; 
         }
         .btn-bellaco:active { transform: scale(0.95); }
-        .btn-cancel { background: none; border: none; color: #999; font-size: 15px; font-weight: bold; margin-top: 15px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
+        .btn-cancel { background: none; border: none; color: #999; font-size: 14px; font-weight: bold; margin-top: 12px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
         /* ========================================================= */
 
+        /* Ajuste de pantalla de éxito también más elegante */
         .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.98); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 25px; text-align: center; }
         .goty-screen.active { opacity: 1; pointer-events: auto; }
-        .goty-icon { font-size: 80px; animation: pulse 2s infinite; margin-bottom: 10px; }
-        .goty-title { font-size: 36px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .goty-icon { font-size: 70px; animation: pulse 2s infinite; margin-bottom: 10px; }
+        .goty-title { font-size: 32px; font-weight: 900; color: #00E4C5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
-        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; width: 100%; margin-bottom: 25px; border: 2px dashed #00E4C5; color: white; font-size: 16px; text-align: left; line-height: 1.5; }
-        .goty-summary-box strong { color: #e1bcee; font-size: 20px; display: block; margin-bottom: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px; }
+        .goty-summary-box { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; width: 100%; margin-bottom: 25px; border: 2px dashed #00E4C5; color: white; font-size: 15px; text-align: left; line-height: 1.5; }
+        .goty-summary-box strong { color: #e1bcee; font-size: 18px; display: block; margin-bottom: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px; }
         
-        .goty-text { color: white; font-size: 18px; margin-bottom: 30px; font-weight: 600; line-height: 1.4; }
-        .btn-goty { background: white; color: #742384; padding: 18px 30px; border-radius: 30px; font-weight: 900; border: none; font-size: 16px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.3); width: 100%; }
+        .goty-text { color: white; font-size: 16px; margin-bottom: 30px; font-weight: 600; line-height: 1.4; }
+        .btn-goty { background: white; color: #742384; padding: 16px 25px; border-radius: 25px; font-weight: 900; border: none; font-size: 15px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.3); width: 100%; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
@@ -206,7 +205,7 @@
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV18')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV19')) || [];
 
         function goHome() {
             document.getElementById('viewCategory').classList.remove('active');
@@ -334,7 +333,7 @@
             }).catch(error => console.log('Error silenciado:', error));
 
             canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV18', JSON.stringify(canjeados));
+            localStorage.setItem('fabriCanjesV19', JSON.stringify(canjeados));
             
             const el = document.getElementById(promoActiva);
             el.classList.add('canjeado');
@@ -360,7 +359,7 @@
         }
 
         function resetearApp() {
-            localStorage.removeItem('fabriCanjesV18');
+            localStorage.removeItem('fabriCanjesV19');
             location.reload();
         }
     </script>
