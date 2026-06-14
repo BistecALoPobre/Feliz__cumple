@@ -17,12 +17,12 @@
         .header h1 { font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
         .header p { font-size: 14px; color: #e1bcee; font-weight: 500; }
         
+        /* NOTA: Ahora el botón de volver físico usa history.back() */
         .btn-back { position: absolute; top: calc(25px + env(safe-area-inset-top)); left: 15px; color: white; background: rgba(255,255,255,0.25); border: none; padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; font-size: 13px; }
         
         .view { flex-grow: 1; overflow-y: auto; padding: 15px; display: none; flex-direction: column; gap: 12px; }
         .view.active { display: flex; }
         
-        /* MENU PRINCIPAL MÁS PEQUEÑO */
         .cat-btn { background: white; border-radius: 16px; padding: 16px 15px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 5px solid #742384; transition: transform 0.2s; }
         .cat-btn:active { transform: scale(0.96); }
         .cat-icon { font-size: 32px; margin-right: 15px; }
@@ -30,7 +30,6 @@
         .cat-info p { font-size: 13px; color: #777; line-height: 1.2; }
         .cat-btn.danger { border-left-color: #ff4757; }
 
-        /* LISTA DE PROMOS MÁS COMPACTA */
         .promo-item { background-color: white; border-radius: 14px; padding: 15px; box-shadow: 0 3px 8px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; border-left: 4px solid #00E4C5; position: relative; }
         .promo-item.canjeado { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; border-left-color: #ccc; box-shadow: none; }
         .promo-item.canjeado::after { content: "CANJEADO ✓"; position: absolute; right: 15px; font-weight: 900; color: #aaa; font-size: 11px; }
@@ -42,9 +41,6 @@
         
         .completed-msg { background: linear-gradient(135deg, #ffebeb, #fce4ec); color: #d81b60; padding: 12px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 13px; margin-bottom: 5px; border: 2px dashed #f48fb1; box-shadow: 0 3px 8px rgba(0,0,0,0.05); }
 
-        /* ========================================================= */
-        /* LA CAJITA BLANCA (BOTTOM SHEET) - AÚN MÁS PEQUEÑA         */
-        /* ========================================================= */
         .bottom-sheet { 
             position: absolute; bottom: 0; left: 0; width: 100%; 
             background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; 
@@ -76,9 +72,7 @@
         }
         .btn-bellaco:active { transform: scale(0.95); }
         .btn-cancel { background: none; border: none; color: #999; font-size: 13px; font-weight: bold; margin-top: 10px; cursor: pointer; text-align: center; width: 100%; flex-shrink: 0; }
-        /* ========================================================= */
 
-        /* PANTALLA GOTY REDUCIDA Y ESTILIZADA */
         .goty-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(116, 35, 132, 0.98); z-index: 30; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; text-align: center; }
         .goty-screen.active { opacity: 1; pointer-events: auto; }
         .goty-icon { font-size: 60px; animation: pulse 2s infinite; margin-bottom: 10px; }
@@ -103,7 +97,7 @@
 
     <div class="app-container">
         <div class="header">
-            <button class="btn-back" id="btnBack" onclick="goHome()">❮ Volver</button>
+            <button class="btn-back" id="btnBack" onclick="history.back()">❮ Volver</button>
             <h1 id="mainTitle">Fabri Promos</h1>
             <p id="mainSubtitle">Selecciona una categoría, jefaaaa</p>
         </div>
@@ -118,7 +112,7 @@
         </div>
 
         <div class="view" id="viewCategory"></div>
-        <div class="overlay" id="overlay" onclick="cerrarCombo()"></div>
+        <div class="overlay" id="overlay" onclick="history.back()"></div>
 
         <div class="bottom-sheet" id="bottomSheet">
             <div class="sheet-header">
@@ -129,7 +123,7 @@
             <div class="addons-container" id="bsAddons"></div>
 
             <button class="btn-bellaco" onclick="procesarCanje()">Mi amorcito, ese quieres? chiiii?🚀</button>
-            <button class="btn-cancel" onclick="cerrarCombo()">Mejor no, regresar</button>
+            <button class="btn-cancel" onclick="history.back()">Mejor no, regresar</button>
         </div>
         
         <div class="goty-screen" id="gotyScreen">
@@ -137,7 +131,7 @@
             <div class="goty-title">¡PEDIDO LISTO!</div>
             <div class="goty-summary-box" id="gotySummary"></div>
             <div class="goty-text">Listo mi amorcito :3333 beshooo, muchos beshitos</div>
-            <button class="btn-goty" onclick="cerrarGoty()"> Yeeee, mi amorcito <333, te amooooo </button>
+            <button class="btn-goty" onclick="history.back()"> Yeeee, mi amorcito <333, te amooooo </button>
         </div>
     </div>
 
@@ -206,17 +200,20 @@
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV20')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV21')) || [];
 
-        function goHome() {
+        // ==========================================
+        // FUNCIONES DE INTERFAZ (SOLO CAMBIAN LO VISUAL)
+        // ==========================================
+        function goHomeUI() {
             document.getElementById('viewCategory').classList.remove('active');
             document.getElementById('viewHome').classList.add('active');
             document.getElementById('btnBack').style.display = 'none';
             document.getElementById('mainTitle').innerText = 'Fabri Promos';
-            document.getElementById('mainSubtitle').innerText = 'Selecciona una categoría, jefa';
+            document.getElementById('mainSubtitle').innerText = 'Selecciona una categoría, jefaaaa';
         }
 
-        function openCategory(catId) {
+        function openCategoryUI(catId) {
             const data = db[catId];
             document.getElementById('mainTitle').innerText = data.title;
             document.getElementById('mainSubtitle').innerText = data.subtitle;
@@ -226,7 +223,6 @@
             container.innerHTML = ''; 
             
             let sinCanjear = 0;
-
             data.promos.forEach(p => {
                 if(!canjeados.includes(p.id)) sinCanjear++;
                 
@@ -256,7 +252,7 @@
             document.getElementById('viewCategory').classList.add('active');
         }
 
-        function abrirPromo(id, title, addons, isSingleChoice) {
+        function abrirPromoUI(id, title, addons, isSingleChoice) {
             promoActiva = id;
             document.getElementById('bsTitle').innerText = title;
             const addonsContainer = document.getElementById('bsAddons');
@@ -304,9 +300,35 @@
             document.getElementById('bottomSheet').classList.add('active');
         }
 
-        function cerrarCombo() {
+        function cerrarComboUI() {
             document.getElementById('overlay').classList.remove('active');
             document.getElementById('bottomSheet').classList.remove('active');
+        }
+
+        function cerrarGotyUI() {
+            document.getElementById('gotyScreen').classList.remove('active');
+            promoActiva = null;
+            
+            const catActiva = document.getElementById('mainTitle').innerText;
+            for (let cat in db) {
+                if (db[cat].title === catActiva) {
+                    openCategoryUI(cat);
+                    break;
+                }
+            }
+        }
+
+        // ==========================================
+        // FUNCIONES DE CONTROL (AÑADEN AL HISTORIAL)
+        // ==========================================
+        function openCategory(catId) {
+            openCategoryUI(catId);
+            history.pushState({ layer: 'category' }, ""); // Guarda "Página" en historial
+        }
+
+        function abrirPromo(id, title, addons, isSingleChoice) {
+            abrirPromoUI(id, title, addons, isSingleChoice);
+            history.pushState({ layer: 'promo' }, ""); // Guarda "Cajita" en historial
         }
 
         function procesarCanje() {
@@ -334,35 +356,42 @@
             }).catch(error => console.log('Error silenciado:', error));
 
             canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV20', JSON.stringify(canjeados));
+            localStorage.setItem('fabriCanjesV21', JSON.stringify(canjeados));
             
             const el = document.getElementById(promoActiva);
-            el.classList.add('canjeado');
-            el.onclick = null;
-            const icon = el.querySelector('.touch-icon');
-            if (icon) icon.remove();
-            
-            cerrarCombo();
-            document.getElementById('gotyScreen').classList.add('active');
-        }
-
-        function cerrarGoty() {
-            document.getElementById('gotyScreen').classList.remove('active');
-            promoActiva = null;
-            
-            const catActiva = document.getElementById('mainTitle').innerText;
-            for (let cat in db) {
-                if (db[cat].title === catActiva) {
-                    openCategory(cat);
-                    break;
-                }
+            if (el) {
+                el.classList.add('canjeado');
+                el.onclick = null;
+                const icon = el.querySelector('.touch-icon');
+                if (icon) icon.remove();
             }
+            
+            cerrarComboUI();
+            document.getElementById('gotyScreen').classList.add('active');
+            
+            // Reemplaza "Cajita" con "Pantalla de Éxito" en el historial
+            history.replaceState({ layer: 'goty' }, ""); 
         }
 
         function resetearApp() {
-            localStorage.removeItem('fabriCanjesV20');
+            localStorage.removeItem('fabriCanjesV21');
             location.reload();
         }
+
+        // ==========================================
+        // MAGIA DEL BOTÓN FÍSICO HACIA ATRÁS
+        // ==========================================
+        window.addEventListener('popstate', function(event) {
+            // Este evento se dispara automáticamente si ella presiona el botón físico o la flecha nativa de su cel
+            if (document.getElementById('gotyScreen').classList.contains('active')) {
+                cerrarGotyUI(); // Si está en éxito, cierra y vuelve a menú
+            } else if (document.getElementById('bottomSheet').classList.contains('active')) {
+                cerrarComboUI(); // Si está la cajita abierta, la cierra
+            } else if (document.getElementById('viewCategory').classList.contains('active')) {
+                goHomeUI(); // Si está en la categoría, vuelve al inicio
+            }
+        });
+
     </script>
 </body>
 </html>
