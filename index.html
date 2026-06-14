@@ -99,14 +99,14 @@
         <div class="header">
             <button class="btn-back" id="btnBack" onclick="history.back()">❮ Volver</button>
             <h1 id="mainTitle">Fabri Promos</h1>
-            <p id="mainSubtitle">Selecciona una categoría, jefaaaa</p>
+            <p id="mainSubtitle">Selecciona una categoría, mi amorchitooo <333</p>
         </div>
 
         <div class="view active" id="viewHome">
-            <div class="cat-btn danger" onclick="openCategory('tomar')"><div class="cat-icon">🍻</div><div class="cat-info"><h2>Tomar (Combos)</h2><p>Arma tu mezcla peligrosa</p></div></div>
-            <div class="cat-btn" onclick="openCategory('comer')"><div class="cat-icon">🍔</div><div class="cat-info"><h2>Comer</h2><p>Platos fuertes y antojos</p></div></div>
-            <div class="cat-btn" onclick="openCategory('salir')"><div class="cat-icon">🗺️</div><div class="cat-info"><h2>Salir</h2><p>Operación escape y aventuras</p></div></div>
-            <div class="cat-btn" onclick="openCategory('piqueos')"><div class="cat-icon">🍟</div><div class="cat-info"><h2>Piqueos</h2><p>Emergencias de media tarde</p></div></div>
+            <div class="cat-btn danger" onclick="openCategory('tomar')"><div class="cat-icon">🍻</div><div class="cat-info"><h2>Tomar</h2><p>Tú eliges que tomar</p></div></div>
+            <div class="cat-btn" onclick="openCategory('comer')"><div class="cat-icon">🍔</div><div class="cat-info"><h2>Comidita oño</h2><p>Comidita rica chiii</p></div></div>
+            <div class="cat-btn" onclick="openCategory('salir')"><div class="cat-icon">🗺️</div><div class="cat-info"><h2>Citas oño</h2><p>Para pasear, mi amooor</p></div></div>
+            <div class="cat-btn" onclick="openCategory('piqueos')"><div class="cat-icon">🍟</div><div class="cat-info"><h2>Piqueitos</h2><p>Tú pide lo que quieras chiiii</p></div></div>
             
             <div class="btn-reset" onclick="resetearApp()">[Resetear Memoria]</div>
         </div>
@@ -116,14 +116,14 @@
 
         <div class="bottom-sheet" id="bottomSheet">
             <div class="sheet-header">
-                <div class="sheet-title" id="bsTitle">Armando Combo...</div>
-                <div class="sheet-subtitle" id="bsSubtitle">¿Le metemos algo más a esto?</div>
+                <div class="sheet-title" id="bsTitle">Armando pedido, mi amor</div>
+                <div class="sheet-subtitle" id="bsSubtitle">¿Le metemos algo más?</div>
             </div>
             
             <div class="addons-container" id="bsAddons"></div>
 
-            <button class="btn-bellaco" onclick="procesarCanje()">Mi amorcito, ese quieres? chiiii?🚀</button>
-            <button class="btn-cancel" onclick="history.back()">Mejor no, regresar</button>
+            <button class="btn-bellaco" onclick="procesarCanje()">Mi amorcito, ese quieres? chiiii🚀</button>
+            <button class="btn-cancel" onclick="history.back()">Mejor no, otra cosa</button>
         </div>
         
         <div class="goty-screen" id="gotyScreen">
@@ -141,7 +141,7 @@
                 title: 'Tomar 🍻', subtitle: 'Arma tu combo',
                 promos: [
                     { 
-                        id: 't1', title: 'Cervezas', desc: 'Elige cuál y cuántas', 
+                        id: 't1', title: 'Cervezas', desc: 'Amooor, escoge qué marca y cuántas cada uno', 
                         addons: [ 
                             { isHeader: true, text: 'Marca:' }, 
                             { text: 'Cusqueña', danger: false, group: 'marca' }, 
@@ -154,7 +154,7 @@
                         ] 
                     },
                     { 
-                        id: 't2', title: 'Que nos choque 🔥', desc: 'Peligro inminente', 
+                        id: 't2', title: 'Que nos choque 🔥', desc: 'Gogi?', 
                         addons: [ { isHeader: true, text: 'Para Fabrizio:' }, { text: '🔥 Four Loko', danger: true }, { text: '🍷 Vino', danger: false }, { isHeader: true, text: 'Para Li:' }, { text: '🍷🍷 Vino x2', danger: true }, { text: '🍫 Chocolate', danger: false } ] 
                     }
                 ]
@@ -162,39 +162,40 @@
             'comer': {
                 title: 'Comer 🍔', subtitle: 'Almuerzos y cenas',
                 promos: [
-                    { id: 'c1', title: 'Helado Mr. Bingsu', desc: 'Para refrescar.' },
-                    { id: 'c2', title: 'Pasta en Cachín', desc: 'Cena top.' },
+                    { id: 'c1', title: 'Helado Mr. Bingsu', desc: 'Para probar.' },
+                    { id: 'c2', title: 'Pasta en restaurant', desc: 'Cena goty.' },
                     { id: 'c3', title: 'Poke Bowl', desc: 'Sanito y rico.' },
                     { 
-                        id: 'c5', title: '👨‍🍳 Fabri cocina', desc: 'Pide por esa boquita.', singleChoice: true,
+                        id: 'c5', title: '👨‍🍳 Fabri cocina', desc: 'Pide el que más te gustó. AHor ninguno KJAKAKJJAK.', singleChoice: true,
                         addons: [
-                            { isHeader: true, text: 'Muffins (Leche Coco):' }, { text: 'Vainilla Pura (Fav)', danger: false }, { text: 'Arándanos Frescos', danger: false }, { text: 'Menta & Choco Amargo', danger: false },
-                            { isHeader: true, text: 'Galletas (Leche Avellana):' }, { text: 'Grandotas Avena/Coco', danger: false }, { text: 'Vainilla Crunchy', danger: false },
-                            { isHeader: true, text: 'El Plus Gourmet:' }, { text: 'Clusters Choco 85% & Pistacho', danger: false }
+                            { isHeader: true, text: 'Muffins:' }, { text: 'Vainilla Pura', danger: false }, { text: 'Arándanos', danger: false }, { text: 'Menta', danger: false },
+                            { isHeader: true, text: 'Galletas:' }, { text: 'Galletones Avena/Coco', danger: false }, { text: 'Vainilla', danger: false },
+                            { isHeader: true, text: 'El Plus:' }, { text: 'Chocolatito', danger: false }
                         ]
                     },
-                    { id: 'c6', title: 'Croissant de Pistacho', desc: 'Alanya vibes.' },
-                    { id: 'c7', title: 'Helado en Grido', desc: 'Clásico infalible.' }
+                    { id: 'c6', title: 'Croissant de Pistacho', desc: 'Alanya.' },
+                    { id: 'c7', title: 'Helado en Grido', desc: 'El de siempree.' }
                 ]
             },
             'salir': {
-                title: 'Salir 🗺️', subtitle: 'Aventuras',
-                promos: [ { id: 's1', title: 'Museo', desc: 'Cita aesthetic.' }, { id: 's2', title: 'Hotel 🏨', desc: 'La vieja confiable.' }, { id: 's3', title: 'Buscar Nuevo Hotel', desc: 'Aventura de exploración.' }, { id: 's4', title: 'Hablando Huevadas', desc: 'Noche de risas.' } ]
+                title: 'Salir 🗺️', subtitle: 'Paseitos',
+                promos: [ { id: 's1', title: 'Museo', desc: 'El que quieras.' }, { id: 's2', title: 'Hotelsito 🏨', desc: 'Uno de los de siempre.' }, { id: 's3', title: 'Buscar Nuevo Hotel', desc: 'Buscamos uno nuevo en otro lugar.' }, { id: 's4', title: 'Hablando Huevadas', desc: 'Para kgarnos de risa.' } ]
             },
             'piqueos': {
-                title: 'Piqueos 🍟', subtitle: 'Emergencias',
+                title: 'Piqueos 🍟', subtitle: 'Pide chiii :3333',
                 promos: [ 
-                    { id: 'p1', title: 'Helado M&Ms', desc: 'Bajón dulce.' }, 
-                    { id: 'p2', title: 'Papitas', desc: 'Saladito y crunchy.' }, 
-                    { id: 'p3', title: 'Triple de Aceituna', desc: 'Clásico.' }, 
-                    { id: 'p4', title: 'Triple de Espinaca', desc: 'El favorito.' }, 
-                    { id: 'p5', title: 'Galletitas', desc: 'Para el camino.' }, 
-                    { id: 'p6', title: 'Inka Chips Nativas', desc: 'Papas nativas top.' }, 
-                    { id: 'p7', title: 'Papas de Cebolla', desc: 'Inka chips cebolla.' }, 
-                    { id: 'p8', title: 'Habas', desc: 'Crunchy saludable.' }, 
-                    { id: 'p9', title: 'Chocolate Chin Chin', desc: 'Barra de chocolate.' },
-                    { id: 'p10', title: 'Leche de Soya', desc: 'Nutritivo.' },
-                    { id: 'p11', title: 'Galletón de Avena', desc: 'Sano y llenador.' }
+                    { id: 'p1', title: 'Helado M&Ms', desc: 'Ese rico de vainilla.' }, 
+                    { id: 'p2', title: 'Papitas fritas', desc: 'Las familiares.' }, 
+                    { id: 'p3', title: 'Triple de Aceituna', desc: 'De la señito.' }, 
+                    { id: 'p4', title: 'Triple de Espinaca', desc: 'También de la Señito.' }, 
+                    { id: 'p5', title: 'Galletón', desc: 'El de Avena que te gusta.' }, 
+                    { id: 'p6', title: 'Inka Chips Nativas', desc: 'Papas nativas goty.' }, 
+                    { id: 'p7', title: 'Inka Chips de Cebolla y BBQ', desc: 'Las rojitas tii.' },
+                    { id: 'p8', title: 'Inka Chips Jalapeño', desc: 'Las picantitas ricas.' }, 
+                    { id: 'p9', title: 'Habas', desc: 'Las ricas saladas oño.' }, 
+                    { id: 'p10', title: 'Chocolate Chin Chin', desc: 'Barra de chocolate de chin chin.' },
+                    { id: 'p11', title: 'Leche de Soya', desc: 'Para tomar rico.' },
+                    { id: 'p12', title: 'Ondas picantes', desc: 'Las onditas rojitas.' }
                 ]
             }
         };
@@ -259,7 +260,7 @@
             addonsContainer.innerHTML = '';
             
             if (addons && addons.length > 0) {
-                document.getElementById('bsSubtitle').innerText = isSingleChoice ? 'Elige solo 1 opción, mi amor:' : '¿Cómo armamos el combo, mi amorcito?';
+                document.getElementById('bsSubtitle').innerText = isSingleChoice ? 'Elige, mi amor:' : '¿Cómo armamos todo, mi amorcito?';
                 addonsContainer.style.display = 'flex';
                 
                 addons.forEach(addon => {
@@ -347,7 +348,7 @@
             // ENVIAR A TELEGRAM
             const botToken = '8978888925:AAG27yYKiUTpX8ZKY0kJbkZ8zvg3DyNmuqc';
             const chatId = '5734425002';
-            const mensajeTelegram = `🚨 ¡ALERTA DE CAPRICHO!\n\n👑 Li acaba de canjear:\n🍔 Promo: ${titulo}\n📌 Extras: ${textoSeleccion}\n\n¡Alista todo, operario Fabri! 🚀`;
+            const mensajeTelegram = `🚨 ¡La Liiiii, la Leeeee!\n\n👑 Li acaba de canjear:\n🍔 Promo: ${titulo}\n📌 Extras: ${textoSeleccion}\n\n¡A chambear! 🚀`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: 'POST',
