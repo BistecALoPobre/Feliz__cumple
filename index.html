@@ -108,7 +108,6 @@
             <div class="cat-btn" onclick="openCategory('salir')"><div class="cat-icon">🗺️</div><div class="cat-info"><h2>Citas oño</h2><p>Para pasear, mi amooor</p></div></div>
             <div class="cat-btn" onclick="openCategory('piqueos')"><div class="cat-icon">🍟</div><div class="cat-info"><h2>Piqueitos</h2><p>Tú pide lo que quieras chiiii</p></div></div>
             
-            <div class="btn-reset" onclick="resetearApp()">[Resetear Memoria]</div>
         </div>
 
         <div class="view" id="viewCategory"></div>
@@ -374,10 +373,7 @@
             history.replaceState({ layer: 'goty' }, ""); 
         }
 
-        function resetearApp() {
-            localStorage.removeItem('fabriCanjesV21');
-            location.reload();
-        }
+        
 
         // ==========================================
         // MAGIA DEL BOTÓN FÍSICO HACIA ATRÁS
