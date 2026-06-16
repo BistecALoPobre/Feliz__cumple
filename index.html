@@ -153,8 +153,16 @@
                         ] 
                     },
                     { 
+                        // AQUÍ LE AGREGUÉ LOS GRUPOS "fabri" y "li" PARA PODER EXIGIRLOS
                         id: 't2', title: 'Que nos choque 🔥', desc: 'Gogi?', 
-                        addons: [ { isHeader: true, text: 'Para Fabrizio:' }, { text: '🔥 Four Loko', danger: true }, { text: '🍷 Vino', danger: false }, { isHeader: true, text: 'Para Li:' }, { text: '🍷🍷 Vino x2', danger: true }, { text: '🍫 Chocolate', danger: false } ] 
+                        addons: [ 
+                            { isHeader: true, text: 'Para Fabrizio:' }, 
+                            { text: '🔥 Four Loko', danger: true, group: 'fabri' }, 
+                            { text: '🍷 Vino', danger: false, group: 'fabri' }, 
+                            { isHeader: true, text: 'Para Li:' }, 
+                            { text: '🍷🍷 Vino x2', danger: true, group: 'li' }, 
+                            { text: '🍫 Chocolate', danger: false, group: 'li' } 
+                        ] 
                     }
                 ]
             },
@@ -200,10 +208,10 @@
         };
 
         let promoActiva = null;
-        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV21')) || [];
+        let canjeados = JSON.parse(localStorage.getItem('fabriCanjesV22')) || [];
 
         // ==========================================
-        // FUNCIONES DE INTERFAZ (SOLO CAMBIAN LO VISUAL)
+        // FUNCIONES DE INTERFAZ
         // ==========================================
         function goHomeUI() {
             document.getElementById('viewCategory').classList.remove('active');
@@ -319,19 +327,49 @@
         }
 
         // ==========================================
-        // FUNCIONES DE CONTROL (AÑADEN AL HISTORIAL)
+        // FUNCIONES DE CONTROL
         // ==========================================
         function openCategory(catId) {
             openCategoryUI(catId);
-            history.pushState({ layer: 'category' }, ""); // Guarda "Página" en historial
+            history.pushState({ layer: 'category' }, ""); 
         }
 
         function abrirPromo(id, title, addons, isSingleChoice) {
             abrirPromoUI(id, title, addons, isSingleChoice);
-            history.pushState({ layer: 'promo' }, ""); // Guarda "Cajita" en historial
+            history.pushState({ layer: 'promo' }, ""); 
         }
 
         function procesarCanje() {
+            // ==========================================
+            // BLOQUE DE VALIDACIONES OBLIGATORIAS
+            // ==========================================
+            if (promoActiva === 't1') { // Cervezas
+                const marca = document.querySelector('.addon-chip[data-group="marca"].selected');
+                const cantidad = document.querySelector('.addon-chip[data-group="cantidad"].selected');
+                if (!marca || !cantidad) {
+                    alert("¡Mi amooor! Tienes que elegir la marca y la cantidad antes de pedir 🍻");
+                    return; // Detiene todo si no cumple
+                }
+            }
+
+            if (promoActiva === 't2') { // Que nos choque
+                const fabri = document.querySelector('.addon-chip[data-group="fabri"].selected');
+                const li = document.querySelector('.addon-chip[data-group="li"].selected');
+                if (!fabri || !li) {
+                    alert("¡Ojito! Tienes que elegir algo para mí y algo para ti 🔥");
+                    return;
+                }
+            }
+
+            if (promoActiva === 'c5') { // Fabri Cocina
+                const postre = document.querySelector('.addon-chip.selected');
+                if (!postre) {
+                    alert("¡Mi vida, tienes que elegir qué cosita rica quieres que te cocine! 👨‍🍳");
+                    return;
+                }
+            }
+            // ==========================================
+
             let titulo = document.getElementById('bsTitle').innerText;
             let seleccion = Array.from(document.querySelectorAll('.addon-chip.selected')).map(c => c.innerText);
             let textoSeleccion = seleccion.length > 0 ? seleccion.join(', ') : 'Ricooo yeee';
@@ -344,7 +382,6 @@
             }
             document.getElementById('gotySummary').innerHTML = resumenHTML;
 
-            // ENVIAR A TELEGRAM
             const botToken = '8978888925:AAG27yYKiUTpX8ZKY0kJbkZ8zvg3DyNmuqc';
             const chatId = '5734425002';
             const mensajeTelegram = `🚨 ¡La Liiiii, la Leeeee!\n\n👑 Li acaba de canjear:\n🍔 Promo: ${titulo}\n📌 Extras: ${textoSeleccion}\n\n¡A chambear! 🚀`;
@@ -356,7 +393,7 @@
             }).catch(error => console.log('Error silenciado:', error));
 
             canjeados.push(promoActiva);
-            localStorage.setItem('fabriCanjesV21', JSON.stringify(canjeados));
+            localStorage.setItem('fabriCanjesV22', JSON.stringify(canjeados));
             
             const el = document.getElementById(promoActiva);
             if (el) {
@@ -368,24 +405,16 @@
             
             cerrarComboUI();
             document.getElementById('gotyScreen').classList.add('active');
-            
-            // Reemplaza "Cajita" con "Pantalla de Éxito" en el historial
             history.replaceState({ layer: 'goty' }, ""); 
         }
 
-        
-
-        // ==========================================
-        // MAGIA DEL BOTÓN FÍSICO HACIA ATRÁS
-        // ==========================================
         window.addEventListener('popstate', function(event) {
-            // Este evento se dispara automáticamente si ella presiona el botón físico o la flecha nativa de su cel
             if (document.getElementById('gotyScreen').classList.contains('active')) {
-                cerrarGotyUI(); // Si está en éxito, cierra y vuelve a menú
+                cerrarGotyUI(); 
             } else if (document.getElementById('bottomSheet').classList.contains('active')) {
-                cerrarComboUI(); // Si está la cajita abierta, la cierra
+                cerrarComboUI(); 
             } else if (document.getElementById('viewCategory').classList.contains('active')) {
-                goHomeUI(); // Si está en la categoría, vuelve al inicio
+                goHomeUI(); 
             }
         });
 
