@@ -334,13 +334,13 @@
         function procesarCanje() {
             let titulo = document.getElementById('bsTitle').innerText;
             let seleccion = Array.from(document.querySelectorAll('.addon-chip.selected')).map(c => c.innerText);
-            let textoSeleccion = seleccion.length > 0 ? seleccion.join(', ') : 'Ninguno (Canje)';
+            let textoSeleccion = seleccion.length > 0 ? seleccion.join(', ') : 'Ricooo yeee';
             
             let resumenHTML = `<strong>${titulo}</strong>`;
             if(seleccion.length > 0) {
                 resumenHTML += `+ ${seleccion.join('<br>+ ')}`;
             } else {
-                resumenHTML += `<div style="text-align:center; font-size:13px; color:#ccc; margin-top:10px;">(Canje directo)</div>`;
+                resumenHTML += `<div style="text-align:center; font-size:13px; color:#ccc; margin-top:10px;">Ricooo yeee</div>`;
             }
             document.getElementById('gotySummary').innerHTML = resumenHTML;
 
