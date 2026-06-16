@@ -334,7 +334,7 @@
         function procesarCanje() {
             let titulo = document.getElementById('bsTitle').innerText;
             let seleccion = Array.from(document.querySelectorAll('.addon-chip.selected')).map(c => c.innerText);
-            let textoSeleccion = seleccion.length > 0 ? seleccion.join(', ') : 'Ninguno (Canje directo)';
+            let textoSeleccion = seleccion.length > 0 ? seleccion.join(', ') : 'Ninguno (Canje)';
             
             let resumenHTML = `<strong>${titulo}</strong>`;
             if(seleccion.length > 0) {
